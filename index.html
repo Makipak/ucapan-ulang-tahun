@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c2c2c;
+            --accent: #d4af37;
+            --background: #fafafa;
+            --text: #4a4a4a;
+            --light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 8vw, 6rem);
+            font-weight: 300;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: clamp(1.8rem, 7vw, 3rem);
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero h1 {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+                white-space: nowrap;
+            }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(0.75rem, 2vw, 1.3rem);
+            font-weight: 300;
+            color: var(--text);
+            margin-bottom: 3rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 480px) {
+            .hero .subtitle {
+                font-size: clamp(0.65rem, 1.8vw, 1rem);
+                letter-spacing: 0.1em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero .subtitle {
+                font-size: clamp(0.6rem, 1.5vw, 0.9rem);
+                letter-spacing: 0.08em;
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 2s;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            width: 1px;
+            height: 60px;
+            background: var(--accent);
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        /* Cake Section */
+        .cake-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0;
+        }
+
+        @media (max-width: 768px) {
+            .cake-section {
+                padding: 60px 0;
+            }
+        }
+
+        .cake-container {
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .cake-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cake {
+            width: 200px;
+            height: 250px;
+            margin: 0 auto 40px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .cake:hover {
+            transform: scale(1.05);
+        }
+
+        .cake-layer {
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .cake-layer:nth-child(1) {
+            width: 180px;
+            margin: 0 auto 10px;
+        }
+
+        .cake-layer:nth-child(2) {
+            width: 200px;
+        }
+
+        .candle {
+            width: 8px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--accent), #c9a227);
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .flame {
+            width: 16px;
+            height: 24px;
+            background: linear-gradient(to bottom, #ffd700, #ff6b35);
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 0.5s infinite alternate;
+            box-shadow: 0 0 20px #ffd700;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.1, 0.95); }
+        }
+
+        .cake-message {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .cake {
+                width: 150px;
+                height: 200px;
+            }
+
+            .cake-layer {
+                height: 50px;
+            }
+
+            .cake-layer:nth-child(1) {
+                width: 130px;
+            }
+
+            .cake-layer:nth-child(2) {
+                width: 150px;
+            }
+
+            .cake-message {
+                font-size: 1.2rem;
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cake {
+                width: 120px;
+                height: 160px;
+            }
+
+            .cake-layer {
+                height: 40px;
+            }
+
+            .cake-layer:nth-child(1) {
+                width: 100px;
+            }
+
+            .cake-layer:nth-child(2) {
+                width: 120px;
+            }
+
+            .candle {
+                width: 6px;
+                height: 30px;
+                top: -28px;
+            }
+
+            .flame {
+                width: 12px;
+                height: 18px;
+                top: -18px;
+            }
+
+            .cake-message {
+                font-size: 1rem;
+                padding: 0 15px;
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            animation: confetti-fall linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Music Control */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .music-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .music-bar {
+            width: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .music-bar:nth-child(1) {
+            height: 12px;
+        }
+
+        .music-bar:nth-child(2) {
+            height: 18px;
+        }
+
+        .music-bar:nth-child(3) {
+            height: 14px;
+        }
+
+        .music-bar:nth-child(4) {
+            height: 20px;
+        }
+
+        .music-icon.playing .music-bar:nth-child(1) {
+            animation: musicBounce1 0.6s ease-in-out infinite;
+        }
+
+        .music-icon.playing .music-bar:nth-child(2) {
+            animation: musicBounce2 0.6s ease-in-out infinite 0.15s;
+        }
+
+        .music-icon.playing .music-bar:nth-child(3) {
+            animation: musicBounce3 0.6s ease-in-out infinite 0.3s;
+        }
+
+        .music-icon.playing .music-bar:nth-child(4) {
+            animation: musicBounce4 0.6s ease-in-out infinite 0.45s;
+        }
+
+        @keyframes musicBounce1 {
+            0%, 100% { height: 12px; }
+            50% { height: 6px; }
+        }
+
+        @keyframes musicBounce2 {
+            0%, 100% { height: 18px; }
+            50% { height: 10px; }
+        }
+
+        @keyframes musicBounce3 {
+            0%, 100% { height: 14px; }
+            50% { height: 8px; }
+        }
+
+        @keyframes musicBounce4 {
+            0%, 100% { height: 20px; }
+            50% { height: 12px; }
+        }
+
+        .music-icon.paused .music-bar {
+            animation: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .music-control {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .music-icon {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        /* Transition Overlay */
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .transition-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .transition-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--primary);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .transition-overlay.active .transition-message {
+            opacity: 1;
+        }
+
+        /* Start Overlay */
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        }
+
+        .start-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .start-button {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--primary);
+            background: var(--light);
+            border: 2px solid var(--accent);
+            padding: 20px 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            background: var(--accent);
+            color: var(--light);
+        }
+
+        .start-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Start Overlay -->
+    <div class="start-overlay" id="startOverlay">
+        <button class="start-button" id="startButton">Klik ini</button>
+    </div>
+
+    <!-- Transition Overlay -->
+    <div class="transition-overlay" id="transitionOverlay">
+        <div class="transition-message">Membuka surat untukmu...</div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Selamat Ulang Tahun</h1>
+            <p class="subtitle">Ita Febrianti</p>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <!-- Cake Section -->
+    <section class="cake-section">
+        <div class="container">
+            <div class="cake-container">
+                <div class="cake" id="cakeElement">
+                    <div class="cake-layer">
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                    </div>
+                    <div class="cake-layer"></div>
+                </div>
+                <p class="cake-message">Tiup lilin dan berdo'a dengan klik layar ini</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <div class="music-icon playing" id="musicIcon">
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Confetti Animation
+        function createConfetti() {
+            const confettiContainer = document.body;
+            const colors = ['#d4af37', '#c9a227', '#2c2c2c', '#ffd700', '#ff6b35'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    
+                    confettiContainer.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+
+        // Create confetti periodically
+        createConfetti();
+        setInterval(createConfetti, 8000);
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.cake-container').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Music Control - Autoplay
+        const musicControl = document.getElementById('musicControl');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = true;
+
+        let audioContext;
+        let oscillator;
+        let gainNode;
+        let timeoutId;
+
+        function playNote() {
+            if (!isPlaying) return;
+            
+            if (!audioContext) return;
+            
+            const melodyNotes = [523.25, 587.33, 659.25, 698.46, 783.99];
+            const noteIndex = Math.floor(Math.random() * melodyNotes.length);
+            
+            oscillator = audioContext.createOscillator();
+            gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = melodyNotes[noteIndex];
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.8);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.8);
+            
+            timeoutId = setTimeout(playNote, 1000);
+        }
+
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            playNote();
+        }
+
+        function stopAudio() {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+            if (oscillator) {
+                try {
+                    oscillator.stop();
+                } catch(e) {}
+                oscillator = null;
+            }
+        }
+
+        // Auto-scroll from hero to cake section on page load
+        let hasStarted = false;
+
+        // Start button click handler
+        document.getElementById('startButton').addEventListener('click', () => {
+            if (hasStarted) return;
+            hasStarted = true;
+
+            const startOverlay = document.getElementById('startOverlay');
+            
+            // Hide start overlay
+            startOverlay.classList.add('hidden');
+            
+            // Save music state
+            localStorage.setItem('musicPlaying', 'true');
+            
+            // Start music
+            setTimeout(() => {
+                initAudio();
+                musicIcon.classList.add('playing');
+                musicIcon.classList.remove('paused');
+            }, 300);
+
+            // Auto-scroll to cake section after 5 seconds
+            setTimeout(() => {
+                const cakeSection = document.querySelector('.cake-section');
+                const targetScroll = cakeSection.offsetTop;
+                const duration = 2000;
+                let startTime = null;
+                const startPosition = window.pageYOffset;
+                
+                function smoothScrollAnimation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const progress = Math.min(timeElapsed / duration, 1);
+                    
+                    const ease = progress < 0.5
+                        ? 2 * progress * progress
+                        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                    
+                    window.scrollTo(0, startPosition + ((targetScroll - startPosition) * ease));
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(smoothScrollAnimation);
+                    }
+                }
+                
+                requestAnimationFrame(smoothScrollAnimation);
+            }, 5000);
+        });
+
+        musicControl.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            
+            // Save music state
+            localStorage.setItem('musicPlaying', isPlaying ? 'true' : 'false');
+            
+            if (isPlaying) {
+                musicIcon.classList.add('playing');
+                musicIcon.classList.remove('paused');
+                if (!audioContext) {
+                    initAudio();
+                } else {
+                    audioContext.resume();
+                    playNote();
+                }
+            } else {
+                musicIcon.classList.remove('playing');
+                musicIcon.classList.add('paused');
+                stopAudio();
+            }
+        });
+
+        // Candle click to blow and redirect to letter page
+        let hasBlownCandle = false;
+        
+        document.getElementById('cakeElement').addEventListener('click', function() {
+            if (hasBlownCandle) return;
+            hasBlownCandle = true;
+            
+            const flame = document.querySelector('.flame');
+            const transitionOverlay = document.getElementById('transitionOverlay');
+            
+            flame.style.animation = 'none';
+            flame.style.opacity = '0';
+            
+            // Create wish text overlay with floating particles
+            const wishOverlay = document.createElement('div');
+            wishOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                pointer-events: none;
+                background: rgba(250, 250, 250, 0.7);
+                backdrop-filter: blur(5px);
+            `;
+            
+            // Create floating particles
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: ${Math.random() * 8 + 4}px;
+                    height: ${Math.random() * 8 + 4}px;
+                    background: ${['#d4af37', '#ffd700', '#ffed4e', '#fff'][Math.floor(Math.random() * 4)]};
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    opacity: ${Math.random() * 0.6 + 0.4};
+                    animation: floatParticle ${Math.random() * 3 + 3}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 2}s;
+                    box-shadow: 0 0 10px ${['#d4af37', '#ffd700'][Math.floor(Math.random() * 2)]};
+                `;
+                wishOverlay.appendChild(particle);
+            }
+            
+            // Add floating animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes floatParticle {
+                    0%, 100% {
+                        transform: translateY(0px) translateX(0px);
+                    }
+                    25% {
+                        transform: translateY(-20px) translateX(10px);
+                    }
+                    50% {
+                        transform: translateY(-10px) translateX(-10px);
+                    }
+                    75% {
+                        transform: translateY(-30px) translateX(5px);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            const wishText = document.createElement('div');
+            wishText.textContent = "Semoga do'a dan harapan ita bisa terkabul ammiinnn";
+            wishText.style.cssText = `
+                font-family: 'Cormorant Garamond', serif;
+                font-size: clamp(1.5rem, 5vw, 2.5rem);
+                color: var(--accent);
+                text-align: center;
+                animation: fadeInUp 1s ease forwards;
+                padding: 30px 40px;
+                background: rgba(255, 255, 255, 0.98);
+                border-radius: 15px;
+                box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+                max-width: 90%;
+                line-height: 1.4;
+                border: 2px solid var(--accent);
+                position: relative;
+                z-index: 10;
+            `;
+            
+            wishOverlay.appendChild(wishText);
+            document.body.appendChild(wishOverlay);
+            
+            // Extra confetti burst
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = '#ffd700';
+                    confetti.style.animationDuration = '2s';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 2000);
+                }, i * 30);
+            }
+            
+            // Start transition and redirect
+            setTimeout(() => {
+                wishText.style.animation = 'fadeOut 0.5s ease forwards';
+                
+                setTimeout(() => {
+                    transitionOverlay.classList.add('active');
+                }, 300);
+                
+                // Redirect to letter page
+                setTimeout(() => {
+                    wishOverlay.remove();
+                    window.location.href = 'letter.html';
+                }, 1500);
+            }, 2500);
+        });
+    </script>
+</body>
+</html>

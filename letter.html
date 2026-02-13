@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c2c2c;
+            --accent: #d4af37;
+            --background: #fafafa;
+            --text: #4a4a4a;
+            --light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        /* Letter Section */
+        .letter-section {
+            min-height: 100vh;
+            padding: 100px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .letter {
+            background: var(--light);
+            padding: 60px 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            border: 1px solid #e8e8e8;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1.5s ease forwards;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .letter-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .letter-body {
+            font-size: 1.1rem;
+            line-height: 2;
+            color: var(--text);
+            margin-bottom: 40px;
+        }
+
+        .letter-body p {
+            margin-bottom: 25px;
+        }
+
+        .letter-signature {
+            text-align: right;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-top: 40px;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            animation: confetti-fall linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Music Control */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .music-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .music-bar {
+            width: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .music-bar:nth-child(1) {
+            height: 12px;
+        }
+
+        .music-bar:nth-child(2) {
+            height: 18px;
+        }
+
+        .music-bar:nth-child(3) {
+            height: 14px;
+        }
+
+        .music-bar:nth-child(4) {
+            height: 20px;
+        }
+
+        .music-icon.playing .music-bar:nth-child(1) {
+            animation: musicBounce1 0.6s ease-in-out infinite;
+        }
+
+        .music-icon.playing .music-bar:nth-child(2) {
+            animation: musicBounce2 0.6s ease-in-out infinite 0.15s;
+        }
+
+        .music-icon.playing .music-bar:nth-child(3) {
+            animation: musicBounce3 0.6s ease-in-out infinite 0.3s;
+        }
+
+        .music-icon.playing .music-bar:nth-child(4) {
+            animation: musicBounce4 0.6s ease-in-out infinite 0.45s;
+        }
+
+        @keyframes musicBounce1 {
+            0%, 100% { height: 12px; }
+            50% { height: 6px; }
+        }
+
+        @keyframes musicBounce2 {
+            0%, 100% { height: 18px; }
+            50% { height: 10px; }
+        }
+
+        @keyframes musicBounce3 {
+            0%, 100% { height: 14px; }
+            50% { height: 8px; }
+        }
+
+        @keyframes musicBounce4 {
+            0%, 100% { height: 20px; }
+            50% { height: 12px; }
+        }
+
+        .music-icon.paused .music-bar {
+            animation: none !important;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .letter {
+                padding: 40px 25px;
+            }
+
+            .letter-header h2 {
+                font-size: 2rem;
+            }
+
+            .letter-body {
+                font-size: 0.95rem;
+                line-height: 1.8;
+            }
+
+            .letter-signature {
+                font-size: 1.3rem;
+            }
+
+            .music-control {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .music-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            .letter-section {
+                padding: 80px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .letter {
+                padding: 30px 20px;
+            }
+
+            .letter-header {
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+            }
+
+            .letter-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .letter-body {
+                font-size: 0.9rem;
+                line-height: 1.7;
+            }
+
+            .letter-body p {
+                margin-bottom: 20px;
+            }
+
+            .letter-signature {
+                font-size: 1.2rem;
+                margin-top: 30px;
+            }
+
+            .letter-section {
+                padding: 60px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Letter Section -->
+    <section class="letter-section">
+        <div class="container">
+            <div class="letter">
+                <div class="letter-header">
+                    <h2>Untuk, Ita</h2>
+                </div>
+                <div class="letter-body">
+                    <p>Busett hari ini ulang tahun yee, gimana tahun kemaren kehidupan aman kah?</p>
+                    
+                    <p>Maaf yaa tahun kemaren ga ngucapin pas hari ultah itaa maaf banget, tapi yaa sekarang bisa saya ucapin lagi pake web ini yaa biar keren aja sih akwoawkokaw</p>
+                    
+                    <p>Semoga tahun ini makin banyak rezekinya, semakin lebih baik lagi dari tahun tahun kemaren, di permudah dalam perkuliahannya semuanya dah, dan semoga yang ita doakan terkabulkan lah</p>
+                    
+                    <p>Sekali lagi selamat ulang tahun itaa 🥳🥳</p>
+                </div>
+                <div class="letter-signature">
+                    From,<br>
+                    hans
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <div class="music-icon playing" id="musicIcon">
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Confetti Animation
+        function createConfetti() {
+            const confettiContainer = document.body;
+            const colors = ['#d4af37', '#c9a227', '#2c2c2c', '#ffd700', '#ff6b35'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    
+                    confettiContainer.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+
+        // Create confetti periodically
+        createConfetti();
+        setInterval(createConfetti, 8000);
+
+        // Music Control
+        const musicControl = document.getElementById('musicControl');
+        const musicIcon = document.getElementById('musicIcon');
+        
+        // Check if music should be playing from previous page
+        const shouldPlayMusic = localStorage.getItem('musicPlaying') === 'true';
+        let isPlaying = shouldPlayMusic;
+
+        let audioContext;
+        let oscillator;
+        let gainNode;
+        let timeoutId;
+
+        function playNote() {
+            if (!isPlaying) return;
+            
+            if (!audioContext) return;
+            
+            const melodyNotes = [523.25, 587.33, 659.25, 698.46, 783.99];
+            const noteIndex = Math.floor(Math.random() * melodyNotes.length);
+            
+            oscillator = audioContext.createOscillator();
+            gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = melodyNotes[noteIndex];
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.8);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.8);
+            
+            timeoutId = setTimeout(playNote, 1000);
+        }
+
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            playNote();
+        }
+
+        function stopAudio() {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+            if (oscillator) {
+                try {
+                    oscillator.stop();
+                } catch(e) {}
+                oscillator = null;
+            }
+        }
+
+        musicControl.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            
+            // Save music state
+            localStorage.setItem('musicPlaying', isPlaying ? 'true' : 'false');
+            
+            if (isPlaying) {
+                musicIcon.classList.add('playing');
+                musicIcon.classList.remove('paused');
+                if (!audioContext) {
+                    initAudio();
+                } else {
+                    audioContext.resume();
+                    playNote();
+                }
+            } else {
+                musicIcon.classList.remove('playing');
+                musicIcon.classList.add('paused');
+                stopAudio();
+            }
+        });
+
+        // Auto-start music and scroll on page load
+        window.addEventListener('load', () => {
+            // Start music if it was playing
+            if (shouldPlayMusic) {
+                setTimeout(() => {
+                    initAudio();
+                    musicIcon.classList.add('playing');
+                    musicIcon.classList.remove('paused');
+                }, 300);
+            } else {
+                musicIcon.classList.remove('playing');
+                musicIcon.classList.add('paused');
+            }
+
+            // Start auto-scroll after 1 second
+            setTimeout(() => {
+                startAutoScroll();
+            }, 1000);
+        });
+
+        // Auto-scroll function
+        function startAutoScroll() {
+            const letterSection = document.querySelector('.letter-section');
+            const letter = document.querySelector('.letter');
+            const startPosition = 0;
+            const targetPosition = letterSection.offsetHeight - window.innerHeight + 100;
+            const distance = targetPosition - startPosition;
+            
+            // Slower scroll for comfortable reading (60 pixels per second)
+            const duration = Math.abs(distance) * 60;
+            
+            let startTime = null;
+            let userInterrupted = false;
+            
+            // Detect user interaction to pause auto-scroll
+            const onUserInteraction = () => {
+                userInterrupted = true;
+                window.removeEventListener('wheel', onUserInteraction);
+                window.removeEventListener('touchmove', onUserInteraction);
+                window.removeEventListener('keydown', onUserInteraction);
+            };
+            
+            window.addEventListener('wheel', onUserInteraction, { passive: true });
+            window.addEventListener('touchmove', onUserInteraction, { passive: true });
+            window.addEventListener('keydown', onUserInteraction, { passive: true });
+            
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                if (userInterrupted) {
+                    window.removeEventListener('wheel', onUserInteraction);
+                    window.removeEventListener('touchmove', onUserInteraction);
+                    window.removeEventListener('keydown', onUserInteraction);
+                    return;
+                }
+                
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                
+                // Ease-in-out for smooth scroll
+                const ease = progress < 0.5
+                    ? 2 * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                
+                const newPosition = startPosition + (distance * ease);
+                window.scrollTo(0, newPosition);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animation);
+                } else {
+                    // Auto-scroll completed
+                    window.removeEventListener('wheel', onUserInteraction);
+                    window.removeEventListener('touchmove', onUserInteraction);
+                    window.removeEventListener('keydown', onUserInteraction);
+                }
+            }
+            
+            requestAnimationFrame(animation);
+        }
+    </script>
+</body>
+</html>
